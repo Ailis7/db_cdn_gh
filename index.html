@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Банковские гарантии</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+		<script src="./app.js"></script>
+		<style>
+			@import "./style/main.css";
+		</style>
+	</head>
+	<body>
+		<div id="dashboard">
+			<div
+				id="spinner"
+				class="spinner-border spinner-border-sm"
+				role="status"
+				style="
+					width: 5rem;
+					height: 5rem;
+					margin: auto;
+					color: #4954dd;
+					position: absolute;
+					left: calc(50% - 2.5rem);
+					top: calc(50% - 2.5rem);
+					z-index: 10;
+				"
+				v-show="!loading"
+			></div>
+			<div
+				id="carousel"
+				class="carousel slide"
+				data-ride="carousel"
+				data-interval="60000"
+				v-show="loading"
+			>
+				<div class="carousel-inner">
+					<div class="carousel-item active">
+						<div ref="FirstGarantee">
+							<div class="container-fluid" style="height: 100vh">
+								<header
+									class="row pt-3 px-3 pb-2 mainHeader"
+									style="background-color: #ffffff; margin-bottom: 1%"
+								>
+									<div class="col-1 col-md-1 p-0" style="min-width: 5em">
+										<img
+											class="logo"
+											src="../svg/logo_bg.svg"
+											style="width: 100%"
+										/>
+									</div>
+									<div class="col-12 col-md pl-3 pr-0 headerName">
+										<div class="h1" style="line-height: 0.6">
+											Банковские гарантии
+										</div>
+									</div>
+									<div class="col-2 d-flex justify-content-end p-0">
+										<a
+											class="prev-button mr-1 btn btn-md btn-default d-md-block d-none"
+											@click="arrowPrev"
+										></a>
+										<a
+											class="next-button btn btn-md btn-default d-md-block d-none"
+											@click="arrowNext"
+										>
+										</a>
+									</div>
+								</header>
+
+								<main class="row ml-1 mr-1">
+									<section
+										class="col-12 col-md-8 mr-2 pb-2 d-flex flex-column justify-content-between"
+										style="background-color: #ffffff; border-radius: 20px"
+									>
+										<div class="row pt-1 h5 m-0">Комиссия</div>
+
+										<div class="row">
+											<div class="col-3 col-md-3 cell text-uppercase">
+												Сегодня
+											</div>
+											<div
+												class="col bigDigits mb-2 d-flex justify-content-end"
+												style="padding-right: 0.3rem"
+											>
+												{{ comissions[0].value.toLocaleString('ru-RU') }} ₽
+											</div>
+										</div>
+										<div class="row">
+											<div class="col progress p-0 ml-2 mr-2 mt-n2">
+												<div class="progress-bar" style="width: 50%"></div>
+											</div>
+										</div>
+
+										<div
+											v-for="comission in comissionsWithoutFirst"
+											:key="comission.value"
+										>
+											<div class="row text-uppercase">
+												<div class="col-5 col-md-4 cell">
+													{{ comission.label }}
+												</div>
+												<div class="col h2 d-flex justify-content-end ml-auto">
+													{{ comission.value.toLocaleString('ru-RU') }} ₽
+												</div>
+											</div>
+											<div class="row">
+												<div class="col progress p-0 ml-2 mr-2">
+													<div class="progress-bar" style="width: 35%"></div>
+												</div>
+											</div>
+										</div>
+									</section>
+
+									<section
+										class="col pb-2 d-flex flex-column justify-content-between radiusBorder"
+										style="
+											background-color: #ffffff;
+											border-radius: 20px;
+											padding-left: 1.25rem;
+										"
+									>
+										<div class="row pt-1 h5 mb-1 deal_description">
+											Все сделки
+										</div>
+										<div class="row">
+											<div class="col">
+												<div class="row bigDigits">{{ sdelki[0].value }}</div>
+												<div class="row">
+													<small class="text-uppercase">Количество</small>
+												</div>
+											</div>
+											<div class="col">
+												<div class="row bigDigits">16.1</div>
+												<div class="row">
+													<small class="text-uppercase">
+														Средний чек (млрд)
+													</small>
+												</div>
+											</div>
+										</div>
+
+										<div class="row h5 deal_description">Новые сделки</div>
+										<div class="row">
+											<div class="col">
+												<div class="row bigDigits">{{ sdelki[1].value }}</div>
+												<div class="row">
+													<small class="text-uppercase">Количество</small>
+												</div>
+											</div>
+											<div class="col">
+												<div class="row bigDigits">8.2</div>
+												<div class="row">
+													<small class="text-uppercase">
+														Средний чек (тыс.)
+													</small>
+												</div>
+											</div>
+										</div>
+
+										<div class="row h5 deal_description">Заявки в работе</div>
+										<div class="row">
+											<div class="col">
+												<div class="row bigDigits">{{ rest[0].value }}</div>
+												<div class="row">
+													<small class="text-uppercase">МРК</small>
+												</div>
+											</div>
+											<div class="col">
+												<div class="row bigDigits">{{ rest[1].value }}</div>
+												<div class="row">
+													<small class="text-uppercase"> Риски </small>
+												</div>
+											</div>
+										</div>
+									</section>
+								</main>
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item">
+						<div ref="SecondGarantee">
+							<div class="container-fluid" style="height: 100vh">
+								<header
+									class="row pt-3 px-3 pb-2 mainHeader"
+									style="background-color: #ffffff; margin-bottom: 1%"
+								>
+									<div class="col-1 col-md-1 p-0" style="min-width: 5em">
+										<img
+											class="logo"
+											src="../svg/logo_bg.svg"
+											style="width: 100%"
+										/>
+									</div>
+									<div class="col-12 col-md pl-3 pr-0 headerName">
+										<div class="h1" style="line-height: 0.6">
+											Банковские гарантии
+										</div>
+									</div>
+									<div class="col-2 d-flex justify-content-end p-0">
+										<a
+											class="prev-button mr-1 btn btn-md btn-default d-md-block d-none"
+											@click="arrowPrev"
+										></a>
+										<a
+											class="next-button btn btn-md btn-default d-md-block d-none"
+											@click="arrowNext"
+										>
+										</a>
+									</div>
+								</header>
+
+								<main
+									class="ml-1 mr-1 d-flex flex-column justify-content-between"
+									style="min-height: 83.5%"
+								>
+									<section class="row h5">
+										<div class="col-0 col-md-3"></div>
+										<div class="col">На текущий день</div>
+										<div class="col">Динамика месяца</div>
+										<div class="col">Доля рынка</div>
+									</section>
+
+									<section class="row white flex-fill">
+										<div
+											class="col-12 col-md-3 cell h5 text-uppercase description"
+											style="font-weight: normal"
+										>
+											Объем <strong>портфеля</strong>
+										</div>
+
+										<div class="col cell first_cell">
+											<div class="row">
+												<div class="col bigDigits">
+													17.8 <span class="h5">млрд</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">32%</div>
+												<div class="col increase h5 text_center">104%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+
+										<div class="col cell">
+											<div class="row">
+												<div class="col bigDigits">
+													1.1 <span class="h5">млрд</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">85%</div>
+												<div class="col increase h5 text_center">406%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+										<div class="col cell manyText">
+											<div class="row">
+												<div class="col bigDigits">2.9%</div>
+											</div>
+											<div class="row">
+												<div class="col increase2 h5">192%</div>
+												<div class="col increase h5 text_center">4%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col"
+													>наша доля
+													<p class="m-0">за год</p></small
+												>
+												<small class="text-uppercase col text_center"
+													>рынок
+													<p class="m-0">за год</p></small
+												>
+											</div>
+										</div>
+									</section>
+
+									<section class="row white flex-fill mt-2 mb-2">
+										<div
+											class="col-12 col-md-3 cell h5 text-uppercase description"
+											style="font-weight: normal"
+										>
+											Количество <strong>сделок</strong>
+										</div>
+
+										<div class="col cell first_cell">
+											<div class="row">
+												<div class="col bigDigits">
+													18.1 <span class="h5">млрд</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">16%</div>
+												<div class="col increase h5 text_center">46%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+
+										<div class="col cell">
+											<div class="row">
+												<div class="col bigDigits">
+													2.3 <span class="h5">тыс</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">13%</div>
+												<div class="col increase h5 text_center">13%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+										<div class="col cell manyText">
+											<div class="row">
+												<div class="col bigDigits">15.6%</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">21%</div>
+												<div class="col increase h5 text_center">68%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col __listner__"
+													>наша доля
+													<p class="m-0">за год</p></small
+												>
+												<small class="text-uppercase col text_center"
+													>рынок
+													<p class="m-0">за год</p></small
+												>
+											</div>
+										</div>
+									</section>
+
+									<section class="row white flex-fill">
+										<div
+											class="col-12 col-md-3 cell h5 text-uppercase description"
+											style="font-weight: normal"
+										>
+											Сделки по <strong>новым клиентам</strong>
+										</div>
+										<div class="col cell first_cell">
+											<div class="row">
+												<div class="col bigDigits">
+													14.4
+													<span class="h5" style="display: inline">тыс</span>
+												</div>
+											</div>
+										</div>
+										<div class="col cell">
+											<div class="row">
+												<div class="col bigDigits">
+													0.7 <span class="h5" style="display: inline"></span>
+												</div>
+											</div>
+										</div>
+										<div class="col cell"></div>
+									</section>
+								</main>
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item">
+						<div ref="FirstFactoring">
+							<div class="container-fluid" style="height: 100vh">
+								<header
+									class="row pt-3 px-3 pb-2 mainHeader"
+									style="background-color: #ffffff; margin-bottom: 1%"
+								>
+									<div class="col-1 col-md-1 p-0 mt-n2">
+										<img
+											class="logo"
+											src="../svg/logo_factoring.svg"
+											style="width: 2.5rem"
+										/>
+									</div>
+									<div class="col-12 col-md pl-1 pr-0 headerName">
+										<div class="h1" style="line-height: 0.6">
+											Факторинг ПЛЮС
+										</div>
+									</div>
+									<div class="col-2 d-flex justify-content-end p-0">
+										<a
+											class="prev-button mr-1 btn btn-md btn-default d-md-block d-none"
+											@click="arrowPrev"
+										></a>
+										<a
+											class="next-button btn btn-md btn-default d-md-block d-none"
+											@click="arrowNext"
+										>
+										</a>
+									</div>
+								</header>
+
+								<main class="row ml-1 mr-1">
+									<section
+										class="col-12 col-md-8 mr-2 pb-2 d-flex flex-column justify-content-between"
+										style="background-color: #ffffff; border-radius: 20px"
+									>
+										<div class="row pt-1 h5 m-0">Комиссия</div>
+
+										<div class="row">
+											<div class="col-3 col-md-3 cell text-uppercase">
+												Сегодня
+											</div>
+											<div
+												class="col bigDigits mb-2 d-flex justify-content-end"
+												style="padding-right: 0.3rem"
+											>
+												{{ comissions[0].value.toLocaleString('ru-RU') }} ₽
+											</div>
+										</div>
+										<div class="row">
+											<div class="col progress p-0 ml-2 mr-2 mt-n2">
+												<div class="progress-bar" style="width: 50%"></div>
+											</div>
+										</div>
+
+										<div
+											v-for="comission in comissionsWithoutFirst"
+											:key="comission.value"
+										>
+											<div class="row text-uppercase">
+												<div class="col-5 col-md-4 cell">
+													{{ comission.label }}
+												</div>
+												<div class="col h2 d-flex justify-content-end ml-auto">
+													{{ comission.value.toLocaleString('ru-RU') }} ₽
+												</div>
+											</div>
+											<div class="row">
+												<div class="col progress p-0 ml-2 mr-2">
+													<div class="progress-bar" style="width: 35%"></div>
+												</div>
+											</div>
+										</div>
+									</section>
+
+									<section
+										class="col pb-2 d-flex flex-column justify-content-between radiusBorder"
+										style="
+											background-color: #ffffff;
+											border-radius: 20px;
+											padding-left: 1.25rem;
+										"
+									>
+										<div class="row pt-1 h5 mb-1 deal_description">
+											Все сделки
+										</div>
+										<div class="row">
+											<div class="col">
+												<div class="row bigDigits">{{ sdelki[0].value }}</div>
+												<div class="row">
+													<small class="text-uppercase">Количество</small>
+												</div>
+											</div>
+											<div class="col">
+												<div class="row bigDigits">16.1</div>
+												<div class="row">
+													<small class="text-uppercase">
+														Средний чек (млрд)
+													</small>
+												</div>
+											</div>
+										</div>
+
+										<div class="row h5 deal_description">Новые сделки</div>
+										<div class="row">
+											<div class="col">
+												<div class="row bigDigits">{{ sdelki[1].value }}</div>
+												<div class="row">
+													<small class="text-uppercase">Количество</small>
+												</div>
+											</div>
+											<div class="col">
+												<div class="row bigDigits">8.2</div>
+												<div class="row">
+													<small class="text-uppercase">
+														Средний чек (тыс.)
+													</small>
+												</div>
+											</div>
+										</div>
+
+										<div class="row h5 deal_description invisible">
+											Заявки в работе
+										</div>
+										<div class="row invisible">
+											<div class="col">
+												<div class="row bigDigits">{{ rest[0].value }}</div>
+												<div class="row">
+													<small class="text-uppercase">МРК</small>
+												</div>
+											</div>
+											<div class="col">
+												<div class="row bigDigits">{{ rest[1].value }}</div>
+												<div class="row">
+													<small class="text-uppercase"> Риски </small>
+												</div>
+											</div>
+										</div>
+									</section>
+								</main>
+							</div>
+						</div>
+					</div>
+					<div class="carousel-item">
+						<div ref="SecondFactoring">
+							<div class="container-fluid" style="height: 100vh">
+								<header
+									class="row pt-3 px-3 pb-2 mainHeader"
+									style="background-color: #ffffff; margin-bottom: 1%"
+								>
+									<div class="col-1 col-md-1 p-0 mt-n2">
+										<img
+											class="logo"
+											src="../svg/logo_factoring.svg"
+											style="width: 2.5rem"
+										/>
+									</div>
+									<div class="col-12 col-md pl-1 pr-0 headerName">
+										<div class="h1" style="line-height: 0.6">
+											Факторинг ПЛЮС
+										</div>
+									</div>
+									<div class="col-2 d-flex justify-content-end p-0">
+										<a
+											class="prev-button mr-1 btn btn-md btn-default d-md-block d-none"
+											@click="arrowPrev"
+										></a>
+										<a
+											class="next-button btn btn-md btn-default d-md-block d-none"
+											@click="arrowNext"
+										>
+										</a>
+									</div>
+								</header>
+
+								<main
+									class="ml-1 mr-1 d-flex flex-column justify-content-between"
+									style="min-height: 83.5%"
+								>
+									<section class="row h5">
+										<div class="col-0 col-md-3"></div>
+										<div class="col">На текущий день</div>
+										<div class="col">Динамика месяца</div>
+										<div class="col">Доля рынка</div>
+									</section>
+
+									<section class="row white flex-fill">
+										<div
+											class="col-12 col-md-3 cell h5 text-uppercase description"
+											style="font-weight: normal"
+										>
+											Объем <strong>портфеля</strong>
+										</div>
+
+										<div class="col cell first_cell">
+											<div class="row">
+												<div class="col bigDigits">
+													5.3 <span class="h5">млрд</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">32%</div>
+												<div class="col increase h5 text_center">104%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+
+										<div class="col cell">
+											<div class="row">
+												<div class="col bigDigits">
+													0.3 <span class="h5">млрд</span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">85%</div>
+												<div class="col increase h5 text_center">406%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+										<div class="col cell manyText">
+											<div class="row">
+												<div class="col bigDigits">2.9%</div>
+											</div>
+											<div class="row">
+												<div class="col increase2 h5">192%</div>
+												<div class="col increase h5 text_center">4%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col"
+													>наша доля
+													<p class="m-0">за год</p></small
+												>
+												<small class="text-uppercase col text_center"
+													>рынок
+													<p class="m-0">за год</p></small
+												>
+											</div>
+										</div>
+									</section>
+
+									<section class="row white flex-fill mt-2 mb-2">
+										<div
+											class="col-12 col-md-3 cell h5 text-uppercase description"
+											style="font-weight: normal"
+										>
+											Общее число <strong>клиентов</strong>
+										</div>
+
+										<div class="col cell first_cell">
+											<div class="row">
+												<div class="col bigDigits">
+													461 <span class="h5"></span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">16%</div>
+												<div class="col increase h5 text_center">46%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+
+										<div class="col cell">
+											<div class="row">
+												<div class="col bigDigits">
+													20 <span class="h5"></span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">13%</div>
+												<div class="col increase h5 text_center">13%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+										<div class="col cell manyText">
+											<div class="row">
+												<div class="col bigDigits">15.6%</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">21%</div>
+												<div class="col increase h5 text_center">68%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col __listner__"
+													>наша доля
+													<p class="m-0">за год</p></small
+												>
+												<small class="text-uppercase col text_center"
+													>рынок
+													<p class="m-0">за год</p></small
+												>
+											</div>
+										</div>
+									</section>
+
+									<section class="row white flex-fill">
+										<div
+											class="col-12 col-md-3 cell h5 text-uppercase description"
+											style="font-weight: normal"
+										>
+											Общее число <strong>новых клиентов</strong>
+										</div>
+
+										<div class="col cell first_cell">
+											<div class="row">
+												<div class="col bigDigits">
+													317 <span class="h5"></span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">16%</div>
+												<div class="col increase h5 text_center">46%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+
+										<div class="col cell">
+											<div class="row">
+												<div class="col bigDigits">
+													25 <span class="h5"></span>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col decrease h5">13%</div>
+												<div class="col increase h5 text_center">13%</div>
+											</div>
+											<div class="row">
+												<small class="text-uppercase col">от плана</small>
+												<small class="text-uppercase col text_center"
+													>за год</small
+												>
+											</div>
+										</div>
+										<div class="col cell"></div>
+									</section>
+								</main>
+							</div>
+						</div>
+					</div>
+				</div>
+				<a
+					class="carousel-control-prev d-md-none d-flex"
+					href="#carouselExampleControls"
+					role="button"
+					data-slide="prev"
+					@click="arrowPrev"
+				>
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a>
+				<a
+					class="carousel-control-next d-md-none d-flex"
+					href="#carouselExampleControls"
+					role="button"
+					data-slide="next"
+					@click="arrowNext"
+				>
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.60.0/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	</body>
+</html>

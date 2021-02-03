@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap");
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+html body {
+	font-family: Roboto;
+}
+html {
+	font-size: 20px;
+}
+@media (min-width: 1920px) {
+	html {
+		font-size: 40px;
+	}
+}
+@media (min-width: 1600px) and (max-width: 1919px) {
+	html {
+		font-size: 35px;
+	}
+}
+@media (min-width: 1280px) and (max-width: 1600px) {
+	html {
+		font-size: 27px;
+	}
+}
+@media (max-width: 767px) {
+	html {
+		font-size: 12px;
+	}
+	.headerName[class] {
+		margin-right: -100px;
+		padding-left: 5px !important;
+	}
+	button.el-carousel__arrow[class] {
+		display: inline-block;
+		position: fixed;
+	}
+	header.row.mainHeader[class] {
+		min-height: 7.5%;
+		font-size: 10px;
+	}
+	main.row {
+		min-height: 89.5%;
+		display: flex;
+	}
+	.white .description[class] {
+		display: block;
+		height: 2rem;
+		text-align: center;
+		padding-top: 0.5rem;
+	}
+	.white .first_cell {
+		margin-left: 1rem;
+	}
+	main.row .row .col .row,
+	.deal_description {
+		display: block;
+		text-align: center;
+	}
+}
+section {
+	-webkit-flex: 1
+}
+
+.carousel-item > div{
+	background-color: #f5f5f5;
+}
+
+div.col.progress {
+	border-radius: 20px;
+}
+.el-carousel__arrow[class] {
+	display: none;
+}
+.mainHeader {
+	min-height: 13.5%;
+}
+main.row {
+	min-height: 83.5%;
+}
+
+a[class*="carousel-control-"] {
+	flex-direction: column;
+	justify-content: center;
+
+}
+
+span[class*="carousel-control-"] {
+	border-radius: 50%;
+	padding: 20px;
+	background-color: black;
+	width: 5px;
+
+}
+
+.col[class],
+.row[class],
+.h1[class],
+.h2[class],
+.h3[class],
+.h4[class],
+.h5[class],
+.h6[class],
+small[class] {
+	font-weight: 700;
+}
+.prev-button,
+.next-button {
+	display: block;
+	width: 2em;
+	height: 2em;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	opacity: 0.5;
+	background-size: 100%;
+}
+.prev-button:hover,
+.next-button:hover {
+	opacity: 1;
+	cursor: pointer;
+}
+.prev-button {
+	background-image: url("../svg/arrow-left.svg");
+}
+.next-button {
+	background-image: url("../svg/arrow-right.svg");
+}
+.bigDigits[class] {
+	font-size: 3em;
+	line-height: 1;
+	padding: 0px;
+}
+.white .bigDigits[class] {
+	word-spacing: -0.5rem;
+}
+.progress-bar[class] {
+	border-radius: 20px;
+	background-color: #503aeb;
+}
+.progress[class] {
+	height: 0.8rem;
+}
+small.text-uppercase {
+	font-size: 0.6rem;
+}
+small.text-uppercase.col {
+	padding: 0;
+}
+.text_center {
+	margin-left: 1.75rem;
+}
+.decrease {
+	color: #ff7f00;
+}
+.increase,
+.increase2 {
+	color: #67c23a;
+}
+.increase::before {
+	content: "\25b2";
+	/*"\2BC5";
+	*/
+	font-size: 1rem;
+	position: absolute;
+	left: -1.25rem;
+	top: 0.2rem;
+}
+.decrease[class],
+.increase[class],
+.increase2[class] {
+	margin-bottom: 0;
+	padding: 0;
+}
+.white {
+	background-color: #fff;
+	border-radius: 20px;
+}
+.cell[class] {
+	display: flex;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	min-height: 2rem;
+	justify-content: center;
+}
+.manyText {
+	padding-top: 0.9rem;
+}
